@@ -60,11 +60,10 @@ module.exports = () => {
         data[postId] = req.body;
 
         writeFile(JSON.stringify(data, null, 2), () => {
-            res.status(200).send(`post id:${postId} created`);
-            //console.log(res)
+          res.status(200).send(`post id:${postId} created`);
+          //console.log(res)
         });
-    },
-        true);
+    }, true);
   };
 
   service.update = async (req, res) => {
@@ -76,10 +75,9 @@ module.exports = () => {
         data[postId] = req.body;
 
         writeFile(JSON.stringify(data, null, 2), () => {
-            res.status(200).send(`post id:${postId} updated`);
+          res.status(200).send(`post id:${postId} updated`);
         });
-    },
-        true);
+    }, true);
   };
 
   service.delete = async (req, res) => {
@@ -90,10 +88,9 @@ module.exports = () => {
         delete data[postId];
 
         writeFile(JSON.stringify(data, null, 2), () => {
-            res.status(200).send(`post id:${postId} removed`);
+          res.status(200).send(`post id:${postId} removed`);
         });
-    },
-        true);
+    }, true);
   };
 
   service.login = async (req, res) => {
