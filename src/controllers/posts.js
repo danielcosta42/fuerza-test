@@ -11,7 +11,7 @@ module.exports = () => {
     return { limit, offset };
   };
 
-  controller.findAll = (req, res) => {
+  controller.findAll = async (req, res) => {
     const { page, size, title } = req.query;
     var condition = title
       ? { title: { $regex: new RegExp(title), $options: "i" } }
@@ -52,7 +52,7 @@ module.exports = () => {
       });
   };
 
-  controller.create = async (req, res) => {
+  controller.create = (req, res) => {
     const newPost = new Post({
       title: req.body.title,
       body: req.body.body,

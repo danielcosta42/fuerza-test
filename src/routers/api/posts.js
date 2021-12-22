@@ -1,4 +1,4 @@
-const { ValidateExceptionns } = require("../../helpers/validateExceptions")
+import ValidateExceptionns from '../../helpers/validateExceptions'
 const { authJwt } = require("../../middlewares")
 
 module.exports = function(app) {
