@@ -35,15 +35,15 @@ fs.writeFile(filePath, fileData, encoding, err => {
 };
 
 module.exports = () => {
-  const service = {};
+  const controller = {};
 
-  service.findAll = async (req, res) => {
+  controller.findAll = async (req, res) => {
     readFile(data => {
         res.status(200).send(data);
       }, true);
   };
 
-  service.findOne = async (req, res) => {
+  controller.findOne = async (req, res) => {
     const { postId } = req.params;
     readFile(data => {
         if(postId != null){
@@ -52,7 +52,7 @@ module.exports = () => {
     }, true);
   };
 
-  service.create = async (req, res) => {
+  controller.create = async (req, res) => {
     readFile(data => {
         const postId = uuidv4();
 
@@ -66,7 +66,7 @@ module.exports = () => {
     }, true);
   };
 
-  service.update = async (req, res) => {
+  controller.update = async (req, res) => {
 
     readFile(data => {
 
@@ -80,7 +80,7 @@ module.exports = () => {
     }, true);
   };
 
-  service.delete = async (req, res) => {
+  controller.delete = async (req, res) => {
     readFile(data => {
 
         // delete the user
@@ -93,7 +93,7 @@ module.exports = () => {
     }, true);
   };
 
-  service.login = async (req, res) => {
+  controller.login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
@@ -105,5 +105,5 @@ module.exports = () => {
     });
   };
 
-  return service;
+  return controller;
 };

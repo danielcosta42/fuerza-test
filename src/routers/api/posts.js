@@ -1,7 +1,7 @@
 import ValidateExceptionns from '../../helpers/validateExceptions';
 
 module.exports = function(app) {
-  const service = app.controllers.posts;
+  const controller = app.controllers.posts;
   const validations = app.validations.posts;
 
   const baseURL = '/api/posts';
@@ -9,7 +9,7 @@ module.exports = function(app) {
   const baseValidateAndControllerCall = async (serviceName, req, res) => {
     const errors = await validations[serviceName](req, res);
     if (errors.length === 0) {
-      service[serviceName](req, res);
+        controller[serviceName](req, res);
     } else {
       res
         .status(400)
