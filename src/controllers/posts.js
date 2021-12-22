@@ -6,7 +6,7 @@ const dataPath = 'src/db/posts.json';
 
 const readFile = (
 callback,
-returnJson = false,
+returnJson = true,
 filePath = dataPath,
 encoding = 'utf8'
 ) => {
@@ -38,8 +38,23 @@ module.exports = () => {
   const controller = {};
 
   controller.findAll = async (req, res) => {
+
+    let { page = 1, per_page: perPage = 10 } = req.query;
+    if (Number(page) <= 0) page = 1;
+    if (Number(perPage) < 0) perPage = 1000;
+
     readFile(data => {
-        res.status(200).send(data);
+      const postsCount = Object.keys(data).length;
+
+      const paginatedResults = paginationFormatter(
+        data,
+        page,
+        perPage,
+        postsCount
+      );
+
+      return res.status(200).json(paginatedResults);
+        //res.status(200).send(data);
       }, true);
   };
 
