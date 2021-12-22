@@ -61,6 +61,7 @@ module.exports = () => {
 
         writeFile(JSON.stringify(data, null, 2), () => {
             res.status(200).send(`post id:${postId} created`);
+            //console.log(res)
         });
     },
         true);
@@ -71,7 +72,7 @@ module.exports = () => {
     readFile(data => {
 
         // add the new user
-        const postId = req.params["id"];
+        const { postId } = req.params;
         data[postId] = req.body;
 
         writeFile(JSON.stringify(data, null, 2), () => {
