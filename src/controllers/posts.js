@@ -2,7 +2,7 @@ import paginationFormatter from '../helpers/paginationFormatter';
 import { v4 as uuidv4 } from 'uuid';
 
 var fs = require('fs');
-const dataPath = 'src/db/db.json';
+const dataPath = 'src/db/posts.json';
 
 const readFile = (
 callback,
@@ -60,7 +60,7 @@ module.exports = () => {
         data[postId] = req.body;
 
         writeFile(JSON.stringify(data, null, 2), () => {
-          res.status(200).send(`post id:${postId} created`);
+          res.status(200).send(`post id: ${postId} created`);
           //console.log(res)
         });
     }, true);
@@ -75,7 +75,7 @@ module.exports = () => {
         data[postId] = req.body;
 
         writeFile(JSON.stringify(data, null, 2), () => {
-          res.status(200).send(`post id:${postId} updated`);
+          res.status(200).send(`post id: ${postId} updated`);
         });
     }, true);
   };
@@ -88,7 +88,7 @@ module.exports = () => {
         delete data[postId];
 
         writeFile(JSON.stringify(data, null, 2), () => {
-          res.status(200).send(`post id:${postId} removed`);
+          res.status(200).send(`post id: ${postId} removed`);
         });
     }, true);
   };
