@@ -98,7 +98,7 @@ module.exports = () => {
     readFile(data => {
 
         // delete the user
-        const postId = req.params["id"];
+        const { postId } = req.params;
         delete data[postId];
 
         writeFile(JSON.stringify(data, null, 2), () => {
