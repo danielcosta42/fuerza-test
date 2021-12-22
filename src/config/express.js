@@ -36,7 +36,8 @@ module.exports = () => {
   consign({ cwd: 'src' })
     .then('validations')
     .then('controllers')
-    .then('routers') 
+    .then('routers')
+    //.then('models')
     .into(app);
 
   return app;

@@ -1,19 +1,32 @@
-import paginationFormatter from '../helpers/paginationFormatter';
-import { v4 as uuidv4 } from 'uuid';
 const db = require("../models");
 const Post = db.posts;
 
 module.exports = () => {
   const controller = {};
 
-  controller.findAll = (req, res) => {
-
-    const title = req.query.title;
-    var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
+  const getPagination = (page, size) => {
+    const limit = size ? +size : 3;
+    const offset = page ? page * limit : 0;
   
-    Post.find(condition)
+    return { limit, offset };
+  };
+
+  controller.findAll = (req, res) => {
+    const { page, size, title } = req.query;
+    var condition = title
+      ? { title: { $regex: new RegExp(title), $options: "i" } }
+      : {};
+  
+    const { limit, offset } = getPagination(page, size);
+  
+    Post.paginate(condition, { offset, limit })
       .then(data => {
-        res.send(data);
+        res.send({
+          totalItems: data.totalDocs,
+          posts: data.docs,
+          totalPages: data.totalPages,
+          currentPage: data.page - 1,
+        });
       })
       .catch(err => {
         res.status(500).send({

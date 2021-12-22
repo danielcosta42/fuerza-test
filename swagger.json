@@ -1,29 +1,304 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Fuerza Posts",
-    "description": "API description in Markdown.",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "title": "REST API",
+    "description": ""
   },
-  "host": "http://localhost:9090/",
-  "basePath": "/api",
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [],
   "schemes": [
     "http"
   ],
+  "consumes": [],
+  "produces": [],
   "paths": {
-    "/posts": {
+    "/api/posts/{postId}": {
       "get": {
-        "summary": "Returns a list of posts.",
-        "description": "Optional extended description in Markdown.",
-        "produces": [
-          "application/json"
+        "tags": [
+          "Post"
+        ],
+        "description": "Endpoint para obter um post específico.",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do post."
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "type": "string"
+          }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Post encontrado."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Post não encontrado."
+          },
+          "500": {
+            "description": "Ocorreu um erro ao processar a solicitação."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Post"
+        ],
+        "description": "Endpoint para editar um post.",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do post."
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "body",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "tags",
+            "type": "array",
+            "example": [
+              "a",
+              "b",
+              "b"
+            ],
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post modificado com sucesso."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Post não encontrado."
+          },
+          "500": {
+            "description": "Ocorreu um erro ao processar a solicitação."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Post"
+        ],
+        "description": "Endpoint para deletar um post.",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post modificado com sucesso."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Post não encontrado."
+          },
+          "500": {
+            "description": "Ocorreu um erro ao processar a solicitação."
+          }
+        }
+      }
+    },
+    "/api/posts": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "description": "Endpoint para obter tos os posts.",
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "type": "integer",
+            "in": "query"
+          },
+          {
+            "name": "size",
+            "type": "integer",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post encontrado."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Ocorreu um erro ao processar a solicitação."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Post"
+        ],
+        "description": "Endpoint para criar um novo post.",
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "body",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "tags",
+            "type": "array",
+            "example": [
+              "a",
+              "b",
+              "b"
+            ],
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post criado com sucesso."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Ocorreu um erro ao processar a solicitação."
+          }
+        }
+      }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para criar um novo usuário.",
+        "parameters": [
+          {
+            "name": "username",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "email",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "password",
+            "type": "string",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário criado."
+          },
+          "500": {
+            "description": "Falha ao criar o usuário."
+          }
+        }
+      }
+    },
+    "/api/auth/signin": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para fazer login.",
+        "parameters": [
+          {
+            "name": "username",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "password",
+            "type": "string",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário logado com sucesso."
+          },
+          "401": {
+            "description": "Senha inválida."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          },
+          "500": {
+            "description": "Falha ao fazer login."
           }
         }
       }
     }
-  }
+  },
+  "definitions": {}
 }
