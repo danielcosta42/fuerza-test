@@ -39,7 +39,7 @@ module.exports = () => {
 
   service.findAll = async (req, res) => {
     readFile(data => {
-        res.send(data);
+        res.status(200).send(data);
       }, true);
   };
 
@@ -47,20 +47,20 @@ module.exports = () => {
     const { postId } = req.params;
     readFile(data => {
         if(postId != null){
-            res.send(data[postId])    
+            res.status(200).send(data[postId])    
           }
     }, true);
   };
 
   service.create = async (req, res) => {
     readFile(data => {
-        const newUserId = uuidv4();
+        const postId = uuidv4();
 
         // add the new user
-        data[newUserId] = req.body;
+        data[postId] = req.body;
 
         writeFile(JSON.stringify(data, null, 2), () => {
-            res.status(200).send('new post added');
+            res.status(200).send(`post id:${postId} created`);
         });
     },
         true);
@@ -75,7 +75,7 @@ module.exports = () => {
         data[postId] = req.body;
 
         writeFile(JSON.stringify(data, null, 2), () => {
-            res.status(200).send(`users id:${postId} updated`);
+            res.status(200).send(`post id:${postId} updated`);
         });
     },
         true);
@@ -89,7 +89,7 @@ module.exports = () => {
         delete data[postId];
 
         writeFile(JSON.stringify(data, null, 2), () => {
-            res.status(200).send(`users id:${postId} removed`);
+            res.status(200).send(`post id:${postId} removed`);
         });
     },
         true);
