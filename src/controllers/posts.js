@@ -1,110 +1,105 @@
 import paginationFormatter from '../helpers/paginationFormatter';
 import { v4 as uuidv4 } from 'uuid';
-
-var fs = require('fs');
-const dataPath = 'src/db/posts.json';
-
-const readFile = (
-callback,
-returnJson = true,
-filePath = dataPath,
-encoding = 'utf8'
-) => {
-fs.readFile(filePath, encoding, (err, data) => {
-    if (err) {
-    throw err;
-    }
-
-    callback(returnJson ? JSON.parse(data) : data);
-});
-};
-
-const writeFile = (
-fileData,
-callback,
-filePath = dataPath,
-encoding = 'utf8'
-) => {
-fs.writeFile(filePath, fileData, encoding, err => {
-    if (err) {
-    throw err;
-    }
-
-    callback();
-});
-};
+const db = require("../models");
+const Post = db.posts;
 
 module.exports = () => {
   const controller = {};
 
-  controller.findAll = async (req, res) => {
+  controller.findAll = (req, res) => {
 
-    let { page = 1, per_page: perPage = 10 } = req.query;
-    if (Number(page) <= 0) page = 1;
-    if (Number(perPage) < 0) perPage = 1000;
-
-    readFile(data => {
-      const postsCount = Object.keys(data).length;
-
-      const paginatedResults = paginationFormatter(
-        data,
-        page,
-        perPage,
-        postsCount
-      );
-
-      res.status(200).json(paginatedResults);
-      }, true);
+    const title = req.query.title;
+    var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
+  
+    Post.find(condition)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving posts."
+        });
+      });
   };
 
   controller.findOne = async (req, res) => {
     const { postId } = req.params;
-    readFile(data => {
-        if(postId != null){
-            res.status(200).send(data[postId])    
-          }
-    }, true);
+
+    Post.findById(postId)
+      .then(data => {
+        if (!data)
+          res.status(404).send({ message: "Not found posts with id " + postId });
+        else res.send(data);
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .send({ message: "Error retrieving post with id=" + postId });
+      });
   };
 
   controller.create = async (req, res) => {
-    readFile(data => {
-        const postId = uuidv4();
-
-        // add the new user
-        data[postId] = req.body;
-
-        writeFile(JSON.stringify(data, null, 2), () => {
-          res.status(200).send(`post id: ${postId} created`);
+    const newPost = new Post({
+      title: req.body.title,
+      body: req.body.body,
+      tags: req.body.tags
+    });
+  
+    // Save post in the database
+    newPost
+      .save(newPost)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the post."
         });
-    }, true);
+      });
     
   };
 
   controller.update = async (req, res) => {
 
-    readFile(data => {
+    const { postId } = req.params;
 
-        // add the new user
-        const { postId } = req.params;
-        data[postId] = req.body;
-
-        writeFile(JSON.stringify(data, null, 2), () => {
-          res.status(200).send(`post id: ${postId} updated`);
+    Post.findByIdAndUpdate(postId, req.body, { useFindAndModify: false })
+      .then(data => {
+        if (!data) {
+          res.status(404).send({
+            message: `Cannot update post with id=${postId}. Maybe Tutorial was not found!`
+          });
+        } else res.send({ message: "post was updated successfully." });
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error updating post with id=" + postId
         });
-    }, true);
+      });
   };
 
   controller.delete = async (req, res) => {
-    readFile(data => {
+    const { postId } = req.params;
 
-        // delete the user
-        const { postId } = req.params;
-        delete data[postId];
-
-        writeFile(JSON.stringify(data, null, 2), () => {
-          res.status(200).send(`post id: ${postId} removed`);
+    Post.findByIdAndRemove(postId, { useFindAndModify: false })
+      .then(data => {
+        if (!data) {
+          res.status(404).send({
+            message: `Cannot delete post with id=${postId}. Maybe Tutorial was not found!`
+          });
+        } else {
+          res.send({
+            message: "post was deleted successfully!"
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete post with id=" + postId
         });
-    }, true);
+      });
   };
 
   controller.login = async (req, res) => {
