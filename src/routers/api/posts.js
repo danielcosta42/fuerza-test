@@ -1,4 +1,5 @@
 import ValidateExceptionns from '../../helpers/validateExceptions';
+const { authJwt } = require("../../middlewares");
 
 module.exports = function(app) {
   const controller = app.controllers.posts;
@@ -24,23 +25,23 @@ module.exports = function(app) {
     }
   };
 
-  app.get(`${baseURL}/:postId`, (req, res) =>
+  app.get(`${baseURL}/:postId`, authJwt.verifyToken, (req, res) =>
     baseValidateAndControllerCall('findOne', req, res)
   );
 
-  app.get(`${baseURL}`, (req, res) =>
+  app.get(`${baseURL}`, authJwt.verifyToken, (req, res) =>
     baseValidateAndControllerCall('findAll', req, res)
   );
 
-  app.post(`${baseURL}`, (req, res) =>
+  app.post(`${baseURL}`, authJwt.verifyToken, (req, res) =>
     baseValidateAndControllerCall('create', req, res)
   );
 
-  app.put(`${baseURL}/:postId`, (req, res) =>
+  app.put(`${baseURL}/:postId`, authJwt.verifyToken, (req, res) =>
     baseValidateAndControllerCall('update', req, res)
   );
 
-  app.delete(`${baseURL}/:postId`, (req, res) =>
+  app.delete(`${baseURL}/:postId`, authJwt.verifyToken, (req, res) =>
     baseValidateAndControllerCall('delete', req, res)
   );
 };
