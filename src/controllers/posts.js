@@ -53,8 +53,7 @@ module.exports = () => {
         postsCount
       );
 
-      return res.status(200).json(paginatedResults);
-        //res.status(200).send(data);
+      res.status(200).json(paginatedResults);
       }, true);
   };
 
@@ -76,9 +75,9 @@ module.exports = () => {
 
         writeFile(JSON.stringify(data, null, 2), () => {
           res.status(200).send(`post id: ${postId} created`);
-          //console.log(res)
         });
     }, true);
+    
   };
 
   controller.update = async (req, res) => {
